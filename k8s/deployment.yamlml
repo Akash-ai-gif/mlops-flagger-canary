@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-api
+  namespace: default
+  annotations:
+    # Flagger metrics server (must point to Prometheus service)
+    flagger.app/metrics-server: http://prometheus-server.monitoring.svc.cluster.local
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ml-api
+  template:
+    metadata:
+      labels:
+        app: ml-api
+    spec:
+      containers:
+        - name: ml-api
+          image: akashteckie/ml-api:v4
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /docs
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5

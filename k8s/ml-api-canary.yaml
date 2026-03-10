@@ -1,0 +1,19 @@
+apiVersion: flagger.app/v1beta1
+kind: Canary
+metadata:
+  name: ml-api
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ml-api
+
+  service:
+    name: ml-api-service
+    port: 8000
+
+  analysis:
+    interval: 10s
+    threshold: 10
+    maxWeight: 50
+    stepWeight: 10
